@@ -5,6 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from contextlib import asynccontextmanager
 
+from app.core.redis import redis_manager
+
 from app.core.handlers import setup_exception_handlers
 from app.middleware.request_context import RequestContextMiddleware
 from app.middleware.security import SecurityHeadersMiddleware
@@ -23,9 +25,15 @@ logger = structlog.get_logger()
 async def lifespan(app: FastAPI):
     logger.info("Starting CommerceHub API...")
     # Future: Initialize Redis connections, startup tasks here
+    await redis_manager.connect()
+    logger.info("Redis connected.")
     yield
     logger.info("Shutting down CommerceHub API...")
     # Future: Close connections
+
+    # Disconnect Redis
+    await redis_manager.disconnect()
+    logger.info("Redis disconnected.")
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
