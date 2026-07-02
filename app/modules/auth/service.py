@@ -4,6 +4,7 @@ from app.modules.auth.models import User
 from app.modules.auth.schemas import UserCreate, UserUpdate
 from app.modules.auth.repository import UserRepository, user_repository
 from app.core.security import get_password_hash
+from app.events.bus import event_bus
 
 class UserService(BaseService[User, UserCreate, UserUpdate]):
     def __init__(self, repository: UserRepository):
@@ -25,6 +26,16 @@ class UserService(BaseService[User, UserCreate, UserUpdate]):
         db.add(db_obj)
         await db.commit()
         await db.refresh(db_obj)
+
+        # Trigger the audit event
+        await event_bus.publish(
+            "audit.record",
+            user_id=str(db_obj.id), # System action, or the admin's ID
+            action="user.created",
+            entity_type="User",
+            entity_id=str(db_obj.id),
+            changes={"email": db_obj.email, "role": db_obj.role.value}
+        )
         
         return db_obj
 
