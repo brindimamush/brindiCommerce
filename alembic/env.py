@@ -82,8 +82,9 @@ async def run_async_migrations() -> None:
 def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
     # Ensure Alembic uses your async connection string
-    configuration = config.get_section(config.config_ini_section)
-    configuration["sqlalchemy.url"] = settings.SQLALCHEMY_DATABASE_URI
+    # configuration = config.get_section(config.config_ini_section)
+    # configuration["sqlalchemy.url"] = settings.async_database_url
+    config.set_main_option("sqlalchemy.url", settings.async_database_url)
     asyncio.run(run_async_migrations())
 
 

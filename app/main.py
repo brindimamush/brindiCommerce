@@ -10,7 +10,7 @@ from app.core.redis import redis_manager
 from app.core.handlers import setup_exception_handlers
 from app.middleware.request_context import RequestContextMiddleware
 from app.middleware.security import SecurityHeadersMiddleware
-
+from app.modules.auth.router import router as auth_router
 # Setup structured logging
 structlog.configure(
     processors=[
@@ -64,6 +64,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(auth_router, prefix=settings.API_V1_STR)
 
 @app.get("/health")
 async def health_check():
