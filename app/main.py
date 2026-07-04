@@ -11,6 +11,9 @@ from app.core.handlers import setup_exception_handlers
 from app.middleware.request_context import RequestContextMiddleware
 from app.middleware.security import SecurityHeadersMiddleware
 from app.modules.auth.router import router as auth_router
+from app.modules.store.router import router as store_router
+from app.modules.audit.router import router as audit_router
+from app.modules.dashboard.router import router as dashboard_router
 # Setup structured logging
 structlog.configure(
     processors=[
@@ -66,6 +69,9 @@ app.add_middleware(
 )
 
 app.include_router(auth_router, prefix=settings.API_V1_STR)
+app.include_router(store_router, prefix=settings.API_V1_STR)
+app.include_router(audit_router, prefix=settings.API_V1_STR)
+app.include_router(dashboard_router, prefix=settings.API_V1_STR)
 
 @app.get("/health")
 async def health_check():

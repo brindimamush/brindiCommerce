@@ -2,6 +2,12 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from sqlalchemy.orm import declarative_base
 from app.core.config import settings
 
+from app.core.base_model import Base
+
+from app.modules.auth.models import User
+from app.modules.store.models import StoreSettings
+from app.modules.audit.models import AuditLog
+
 engine = create_async_engine(
     settings.async_database_url,
     echo=False,

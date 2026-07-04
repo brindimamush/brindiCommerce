@@ -2,7 +2,7 @@ import uuid
 import enum
 from sqlalchemy import Column, String, Boolean, Enum, DateTime, func
 from sqlalchemy.dialects.postgresql import UUID
-from app.core.database import Base
+from app.core.base_model import Base
 
 class UserRole(str, enum.Enum):
     OWNER = "owner"

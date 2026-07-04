@@ -1,8 +1,11 @@
 import asyncio
 from logging.config import fileConfig
 from app.core.config import settings
-from app.core.database import Base
+from app.core.base_model import Base
 from app.modules.auth.models import User
+from app.modules.auth.models import User
+from app.modules.store.models import StoreSettings
+from app.modules.audit.models import AuditLog
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
