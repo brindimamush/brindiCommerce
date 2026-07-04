@@ -27,6 +27,3 @@ async def log_audit_event(
         except Exception as e:
             logger.error("Failed to save audit log", error=str(e))
 
-# Subscribe the audit logger to a wildcard or specific events
-# In a real scenario, you might have a standardized naming convention like 'audit.*'
-event_bus.subscribe("audit.record", log_audit_event)

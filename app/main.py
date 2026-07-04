@@ -6,7 +6,8 @@ from fastapi.middleware.gzip import GZipMiddleware
 from contextlib import asynccontextmanager
 
 from app.core.redis import redis_manager
-
+from app.modules.audit.service import log_audit_event
+from app.events.bus import event_bus
 from app.core.handlers import setup_exception_handlers
 from app.middleware.request_context import RequestContextMiddleware
 from app.middleware.security import SecurityHeadersMiddleware
@@ -26,6 +27,7 @@ logger = structlog.get_logger()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    event_bus.subscribe("audit.record", log_audit_event)
     logger.info("Starting CommerceHub API...")
     # Future: Initialize Redis connections, startup tasks here
     await redis_manager.connect()
